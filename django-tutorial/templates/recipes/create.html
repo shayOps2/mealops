@@ -3,16 +3,22 @@
 
 {% block content %}
 {%  if not created %}
+
+
 <div style="margin-top: 30px;"></div>
     <form action="." method="post">
         {% csrf_token %} 
-        <input type="text" name="title" placeholder="Recipe Title" />
-        <textarea name="content" placeholder="content"></textarea>
+        {{ form.as_p }}
         <button type="submit"> create recipe </button>
     </form>
 {% else %}
 
-<li><a href='/recipes/{{object.id}}/'>{{object.title}}</a></li> 
+
+<p>Your recipe was created.</p>
+<a href='/recipes/{{ object.id }}/'>{{ object.title }} - {{ object.content }}</a>
+
+
+<!-- <li><a href='/recipes/{{object.id}}/'>{{object.title}}</a></li>  -->
 
 {% endif %}
 

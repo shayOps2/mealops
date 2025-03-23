@@ -1,5 +1,8 @@
 from django.shortcuts import render
 from .models import Recipe
+from django.contrib.auth.decorators import login_required
+from .forms import RecipeForm
+
 # Create your views here.
 def recipe_detail_view(request, id=None):
     recipe_obj = None
@@ -24,13 +27,16 @@ def recipe_search_view(request):
     }
     return render(request, "recipes/search.html", context=context)
 
+@login_required
 def recipe_create_view(request):
-    context = {}
-    if request.method == "POST":
-        title = request.POST.get("title")
-        content = request.POST.get("content")
-        rec_object = Recipe.objects.create(title=title, content=content)
-        context['object'] = rec_object
+    form = RecipeForm(request.POST or None)
+    context = {
+        "form": form
+    }
+    if form.is_valid():
+        recipe_object = form.save()
+        context['form'] = RecipeForm() 
+        context['object'] = recipe_object
         context['created'] = True
         
     return render(request, "recipes/create.html", context=context)

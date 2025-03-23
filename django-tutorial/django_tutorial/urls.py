@@ -18,12 +18,26 @@ from django.contrib import admin
 from django.urls import path
 
 from .views import home_view
-from recipes import views
+
+from recipes.views import (
+    recipe_search_view,
+    recipe_create_view,
+    recipe_detail_view
+)
+from accounts.views import (
+    login_view,
+    logout_view,
+    register_view
+)
+
 
 urlpatterns = [
     path('', home_view),
-    path('recipes/', views.recipe_search_view),
-    path('recipes/create/', views.recipe_create_view),
-    path('recipes/<int:id>/', views.recipe_detail_view),
+    path('login/', login_view),
+    path('logout/', logout_view),
+    path('register/', register_view),
+    path('recipes/', recipe_search_view),
+    path('recipes/create/', recipe_create_view),
+    path('recipes/<int:id>/', recipe_detail_view),
     path('admin/', admin.site.urls),
 ]

@@ -1,6 +1,0 @@
-asgiref
-Django
-pip
-setuptools
-sqlparse
-typing_extensions

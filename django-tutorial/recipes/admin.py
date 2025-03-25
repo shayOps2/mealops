@@ -4,7 +4,7 @@ from django.contrib import admin
 from .models import Recipe
 
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title']
-    search_fields = ['title', 'content']
+    list_display = ['id', 'title', 'timestamp']
+    search_fields = ['title', 'content', 'timestamp']
 
 admin.site.register(Recipe, RecipeAdmin)

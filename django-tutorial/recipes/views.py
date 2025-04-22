@@ -2,28 +2,32 @@ from django.shortcuts import render
 from .models import Recipe
 from django.contrib.auth.decorators import login_required
 from .forms import RecipeForm
+from django.http import Http404
+from django.db.models import Q 
 
 # Create your views here.
-def recipe_detail_view(request, id=None):
+def recipe_detail_view(request, slug=None):
     recipe_obj = None
-    if id is not None:
-        recipe_obj = Recipe.objects.get(id=id)
+    if slug is not None:
+        try:
+            recipe_obj = Recipe.objects.get(slug=slug)
+        except Recipe.DoesNotExist:
+            raise Http404("Recipe not found")
     context = {
         "object": recipe_obj,
     }
     return render(request, "recipes/detail.html", context=context)
 
 def recipe_search_view(request):
-    try:
-        query = int(request.GET.get('q'))
-    except:
-        query = None
-
-    recipe_obj = None
-    if query is not None:
-        recipe_obj = Recipe.objects.get(id=query)
+    query = request.GET.get('q')  # Get the search query from the request
+    recipe_objects = None
+    if query:
+        # Search for recipes where the title or content contains the query (case-insensitive)
+        recipe_objects = Recipe.objects.filter(
+            Q(title__icontains=query) | Q(content__icontains=query)
+        )
     context = {
-        "object": recipe_obj
+        "object_list": recipe_objects  # Pass the list of matching recipes to the template
     }
     return render(request, "recipes/search.html", context=context)
 

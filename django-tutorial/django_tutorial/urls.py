@@ -38,6 +38,6 @@ urlpatterns = [
     path('register/', register_view),
     path('recipes/', recipe_search_view),
     path('recipes/create/', recipe_create_view),
-    path('recipes/<int:id>/', recipe_detail_view),
+    path('recipes/<slug:slug>/', recipe_detail_view),
     path('admin/', admin.site.urls),
 ]

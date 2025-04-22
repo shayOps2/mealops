@@ -1,20 +1,13 @@
 """
 To render html Web Pages
 """
-from django.http import HttpResponse
 from recipes.models import Recipe
-from django.template.loader import render_to_string
+from django.shortcuts import render
 
-def home_view(request, *args, **kwrgs):
-    recipe_obj = Recipe.objects.get(id=2)
-    recipe_qs = Recipe.objects.all()
+def home_view(request, *args, **kwargs):
+    recipe_qs = Recipe.objects.all()  # Fetch all Recipe objects
 
     context = {
-        "object_list": recipe_qs,
-        "title": recipe_obj.title,
-        "content": recipe_obj.content,
-        "id": recipe_obj.id,
+        "object_list": recipe_qs,  # Pass the queryset to the template
     }
-    HTML_STRING = render_to_string("home-view.html", context=context)
-
-    return HttpResponse(HTML_STRING)
+    return render(request, "home-view.html", context)  

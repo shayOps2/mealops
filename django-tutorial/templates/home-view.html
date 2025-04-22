@@ -1,11 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% if user.is_authenticated %}
+    <p>Hello, {{ user.username }}!</p>
+    <a href="/recipes/create/" class="btn btn-primary">Add Recipe</a> <!-- Direct URL for recipe creation -->
+{% else %}
+    <a href="/login/">Login</a> <!-- Direct URL for login -->
+{% endif %}
 
 <ul>
     {% for x in object_list %}
-        {% if x.title %}
-        <li><a href="{{ x.get_absolute_url }}">{{x.title}}</a></li> 
+        {% if x.name %}
+        <li><a href="{{ x.get_absolute_url }}">{{ x.name }}</a></li> <!-- Uses get_absolute_url from the model -->
         {% endif %}
     {% endfor %}
 </ul>

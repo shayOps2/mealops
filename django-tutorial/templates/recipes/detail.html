@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
-
 {% block content %}
-
-<h1>{{ object.title }}</h1>
-<p>{{ object.content }}</p> 
-
+<h1>{{ object.name }}</h1>
+<p><strong>Description:</strong> {{ object.description }}</p>
+<p><strong>Directions:</strong> {{ object.directions }}</p>
+<p><strong>Created by:</strong> {{ object.user }}</p>
+<p><strong>Last updated:</strong> {{ object.updated }}</p>
 {% endblock content %}

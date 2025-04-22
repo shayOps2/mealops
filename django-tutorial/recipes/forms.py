@@ -1,15 +1,16 @@
+# filepath: /home/shaytur/mealops/django-tutorial/recipes/forms.py
 from django import forms
 from .models import Recipe
 
 class RecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
-        fields = ['title', 'content']
+        fields = ['name', 'description', 'directions', 'active']  # Use valid fields
 
     def clean(self):
         data = self.cleaned_data
-        title = data.get("title")
-        qs = Recipe.objects.filter(title__iexact=title) #sql query for incase sensetive exact match
+        name = data.get("name")
+        qs = Recipe.objects.filter(name__iexact=name)  # Check for case-insensitive exact match
         if qs.exists():
-            self.add_error("title", f"\"{title}\" is already in use. Please pick another title.")
-        return data
+            self.add_error("name", f"\"{name}\" is already in use. Please pick another name.")
+        return data        

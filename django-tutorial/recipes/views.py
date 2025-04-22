@@ -22,9 +22,9 @@ def recipe_search_view(request):
     query = request.GET.get('q')  # Get the search query from the request
     recipe_objects = None
     if query:
-        # Search for recipes where the title or content contains the query (case-insensitive)
+        # Search for recipes where the name contains the query (case-insensitive)
         recipe_objects = Recipe.objects.filter(
-            Q(title__icontains=query) | Q(content__icontains=query)
+            Q(name__icontains=query)
         )
     context = {
         "object_list": recipe_objects  # Pass the list of matching recipes to the template
@@ -38,7 +38,9 @@ def recipe_create_view(request):
         "form": form
     }
     if form.is_valid():
-        recipe_object = form.save()
+        recipe_object = form.save(commit=False)
+        recipe_object.user = request.user  # Associate the recipe with the logged-in user
+        recipe_object.save()
         context['form'] = RecipeForm() 
         context['object'] = recipe_object
         context['created'] = True

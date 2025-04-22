@@ -1,25 +1,15 @@
 {% extends "base.html" %}
 
-
 {% block content %}
-{%  if not created %}
-
-
+{% if not created %}
 <div style="margin-top: 30px;"></div>
-    <form action="." method="post">
-        {% csrf_token %} 
-        {{ form.as_p }}
-        <button type="submit"> create recipe </button>
-    </form>
+<form action="." method="post">
+    {% csrf_token %} 
+    {{ form.as_p }}
+    <button type="submit">Create Recipe</button>
+</form>
 {% else %}
-
-
 <p>Your recipe was created.</p>
-<a href='/recipes/{{ object.id }}/'>{{ object.title }} - {{ object.content }}</a>
-
-
-<!-- <li><a href='/recipes/{{object.id}}/'>{{object.title}}</a></li>  -->
-
+<a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
 {% endif %}
-
 {% endblock content %}

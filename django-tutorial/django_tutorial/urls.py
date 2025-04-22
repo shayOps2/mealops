@@ -33,9 +33,9 @@ from accounts.views import (
 
 urlpatterns = [
     path('', home_view),
-    path('login/', login_view),
-    path('logout/', logout_view),
-    path('register/', register_view),
+    path('login/', login_view, name='login'),
+    path('logout/', logout_view, name='logout'),
+    path('register/', register_view, name='register'),
     path('recipes/', recipe_search_view),
     path('recipes/create/', recipe_create_view),
     path('recipes/<slug:slug>/', recipe_detail_view),

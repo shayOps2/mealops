@@ -1,15 +1,33 @@
-{% extends "base.html" %}
-
-{% block content %}
-{% if not created %}
-<div style="margin-top: 30px;"></div>
-<form action="." method="post">
-    {% csrf_token %} 
+<form method="POST">
+    {% csrf_token %}
     {{ form.as_p }}
+    <h3>Ingredients</h3>
+    {{ formset.management_form }}
+    <div id="ingredient-forms">
+        {% for form in formset %}
+            <div class="ingredient-form">
+                {{ form.as_p }}
+            </div>
+        {% endfor %}
+    </div>
+    <button type="button" id="add-ingredient">Add Another Ingredient</button>
     <button type="submit">Create Recipe</button>
 </form>
-{% else %}
-<p>Your recipe was created.</p>
-<a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
-{% endif %}
-{% endblock content %}
+
+<script>
+    document.getElementById('add-ingredient').addEventListener('click', function() {
+        const ingredientForms = document.getElementById('ingredient-forms');
+        const totalForms = document.querySelector('[name="form-TOTAL_FORMS"]');
+        const formCount = parseInt(totalForms.value, 10);
+        const newForm = ingredientForms.children[0].cloneNode(true);
+        newForm.querySelectorAll('input').forEach(input => {
+            const name = input.name.replace(`-${formCount - 1}-`, `-${formCount}-`);
+            const id = input.id.replace(`-${formCount - 1}-`, `-${formCount}-`);
+            input.name = name;
+            input.id = id;
+            input.value = '';
+        });
+        ingredientForms.appendChild(newForm);
+        totalForms.value = formCount + 1;
+    });
+</script>

@@ -5,6 +5,8 @@ from .forms import RecipeForm
 from django.http import Http404
 from django.db.models import Q 
 from django.forms import modelformset_factory
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponseForbidden
 
 # Create your views here.
 def recipe_detail_view(request, slug=None):
@@ -56,3 +58,31 @@ def recipe_create_view(request):
         context['created'] = True
 
     return render(request, "recipes/create.html", context=context)
+
+@login_required
+def recipe_update_view(request, slug=None):
+    recipe_obj = get_object_or_404(Recipe, slug=slug)
+    if recipe_obj.user != request.user:  # Ensure only the owner can update
+        return HttpResponseForbidden("You are not allowed to edit this recipe.")
+
+    RecipeIngredientFormSet = modelformset_factory(RecipeIngredient, fields=('name', 'quantity', 'unit', 'description'), extra=0)
+    form = RecipeForm(request.POST or None, instance=recipe_obj)
+    formset = RecipeIngredientFormSet(request.POST or None, queryset=recipe_obj.recipeingredient_set.all())
+
+    context = {
+        "form": form,
+        "formset": formset,
+        "object": recipe_obj
+    }
+
+    if form.is_valid() and formset.is_valid():
+        recipe_object = form.save(commit=False)
+        recipe_object.save()
+        for ingredient_form in formset:
+            if ingredient_form.cleaned_data:  # Avoid saving empty forms
+                ingredient = ingredient_form.save(commit=False)
+                ingredient.recipe = recipe_object
+                ingredient.save()
+        context['updated'] = True
+
+    return render(request, "recipes/update.html", context=context)

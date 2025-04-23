@@ -1,0 +1,13 @@
+<h1>Update Recipe</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {{ formset.management_form }}
+    {% for form in formset %}
+        {{ form.as_p }}
+    {% endfor %}
+    <button type="submit" class="btn btn-success">Save Changes</button>
+</form>
+{% if updated %}
+    <p class="text-success">Recipe updated successfully!</p>
+{% endif %}

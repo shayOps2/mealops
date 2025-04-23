@@ -22,13 +22,15 @@ from .views import home_view
 from recipes.views import (
     recipe_search_view,
     recipe_create_view,
-    recipe_detail_view
+    recipe_detail_view,
+    recipe_update_view
 )
 from accounts.views import (
     login_view,
     logout_view,
     register_view
 )
+
 
 
 urlpatterns = [
@@ -39,5 +41,6 @@ urlpatterns = [
     path('recipes/', recipe_search_view),
     path('recipes/create/', recipe_create_view),
     path('recipes/<slug:slug>/', recipe_detail_view),
+    path('recipes/<slug:slug>/update', recipe_update_view, name='update'),
     path('admin/', admin.site.urls),
 ]

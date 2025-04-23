@@ -7,3 +7,8 @@
     {% endfor %}
 </ul>
 <p>{{ object.directions }}</p>
+
+<!-- Add Update Button -->
+{% if object.user == request.user %}
+    <a href="{% url 'update' object.slug %}" class="btn btn-primary">Update Recipe</a>
+{% endif %}

@@ -1,16 +1,17 @@
-# filepath: /home/shaytur/mealops/django-tutorial/recipes/forms.py
 from django import forms
 from .models import Recipe
 
 class RecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
-        fields = ['name', 'description', 'directions', 'active']  # Use valid fields
+        fields = ['name', 'description', 'directions']
 
-    def clean(self):
-        data = self.cleaned_data
-        name = data.get("name")
-        qs = Recipe.objects.filter(name__iexact=name)  # Check for case-insensitive exact match
-        if qs.exists():
-            self.add_error("name", f"\"{name}\" is already in use. Please pick another name.")
-        return data        
+    def __init__(self, *args, **kwargs):
+        self.instance = kwargs.get('instance', None)  # Get the current instance
+        super().__init__(*args, **kwargs)
+
+    def clean_name(self):
+        name = self.cleaned_data.get('name')
+        if Recipe.objects.filter(name=name).exclude(pk=self.instance.pk).exists():
+            raise forms.ValidationError("This name is already in use. Please pick another name.")
+        return name
